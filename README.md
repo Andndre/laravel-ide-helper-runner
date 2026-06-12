@@ -1,39 +1,44 @@
 # Laravel IDE Helper Runner
 
-A lightweight, zero-configuration-friendly VS Code extension that automatically runs the `barryvdh/laravel-ide-helper` generation commands whenever you save a PHP file. Keep your autocomplete and IDE signatures up-to-date in the background without manually running artisan commands!
+Automatically runs [barryvdh/laravel-ide-helper](https://github.com/barryvdh/laravel-ide-helper) commands every time you save a PHP file. This keeps your autocompletion and PHPDoc updated in real-time without having to run Artisan commands manually.
 
-## ✨ Features
+## Features
 
-- **Auto-run on Save**: Runs `ide-helper:generate`, `ide-helper:meta`, and `ide-helper:models --nowrite` in the background seamlessly.
-- **Smart Laravel Detection**: Only runs if an `artisan` file is present in your workspace root.
-- **Auto-Install Helper**: If it detects a Laravel project but `barryvdh/laravel-ide-helper` is not in `composer.json`, it prompts you to install it automatically.
-- **Auto `.gitignore`**: Automatically adds the generated IDE helper files (`_ide_helper.php`, `_ide_helper_models.php`, `.phpstorm.meta.php`) to your `.gitignore` upon auto-install (can be disabled).
-- **Environment Agnostic**: Works natively with your local PHP, or can be configured to run through Docker environments like `ddev` or Laravel `Sail`.
+- **Auto-run on save:** Automatically runs `ide-helper:generate` and `ide-helper:models` when you save a `.php` file.
+- **Smart detection:** Only activates if it detects `artisan` in your workspace.
+- **Auto-installation prompt:** If you open a Laravel project that doesn't have `barryvdh/laravel-ide-helper` installed, it will prompt you and install it automatically.
+- **Gitignore updates:** Optionally adds the generated helper files to your `.gitignore` upon installation.
+- **Cross-environment support:** Works perfectly with native PHP, Laravel Sail, or DDEV by configuring the command prefix.
+- **Parallel Execution:** Optionally runs the commands in parallel for faster updates.
 
-## ⚙️ Configuration Settings
+## Configuration
 
-You can customize the extension behavior by searching for **Laravel IDE Helper Runner** in your VS Code Settings:
+You can customize the extension via your `settings.json` or the VS Code Settings UI. All settings are prefixed with `laravelIdeHelperRunner`.
 
 | Setting | Default | Description |
 |---|---|---|
-| `laravelIdeHelperRunner.enable` | `true` | Quickly toggle the extension on or off. |
-| `laravelIdeHelperRunner.phpCommand` | `php` | Command prefix to run PHP. E.g., `php`, `ddev exec php`, or `./vendor/bin/sail php`. |
-| `laravelIdeHelperRunner.composerCommand` | `composer` | Command prefix to run Composer. E.g., `composer`, `ddev composer`, or `./vendor/bin/sail composer`. |
-| `laravelIdeHelperRunner.commandArgs` | *see below* | The artisan arguments executed. Replaces `{php}` with your `phpCommand`. |
-| `laravelIdeHelperRunner.showNotifications` | `false` | If true, shows a popup notification when generation completes. |
-| `laravelIdeHelperRunner.addToGitignore` | `true` | Auto-adds generated files to `.gitignore` when the extension auto-installs the package. |
+| `laravelIdeHelperRunner.runOnSave` | `true` | Enable or disable running the extension on file save. |
+| `laravelIdeHelperRunner.facades` | `true` | Generate PHPDoc for facades (`artisan ide-helper:generate`) |
+| `laravelIdeHelperRunner.models` | `true` | Generate PHPDoc for models (`artisan ide-helper:models --nowrite`) |
+| `laravelIdeHelperRunner.parallelExecution` | `true` | Run the generators in parallel instead of sequentially. |
+| `laravelIdeHelperRunner.phpPath` | `"php"` | Command prefix for PHP. e.g., `"ddev exec php"`, `"./vendor/bin/sail php"` |
+| `laravelIdeHelperRunner.debounceDelay` | `1000` | Delay in ms before running commands after saving. Prevents spamming. |
+| `laravelIdeHelperRunner.autoClearConsole` | `false` | Automatically clear the output console before running. |
+| `laravelIdeHelperRunner.composerCommand` | `"composer"` | Command prefix for Composer. e.g., `"ddev composer"` |
+| `laravelIdeHelperRunner.addToGitignore` | `true` | Add generated files to `.gitignore` when auto-installing the package. |
+| `laravelIdeHelperRunner.showNotifications` | `false` | Show popup notifications when generation starts and succeeds. |
 
-*Default `commandArgs`:*
-```text
-artisan ide-helper:generate && {php} artisan ide-helper:meta && {php} artisan ide-helper:models --nowrite
-```
+## Usage with DDEV or Sail
+Change `laravelIdeHelperRunner.phpPath` and `laravelIdeHelperRunner.composerCommand` to match your environment.
 
-## 🚀 Usage
-1. Open a Laravel project.
-2. If `laravel-ide-helper` is missing, you'll be prompted to install it.
-3. Start editing any `.php` file.
-4. Save the file.
-5. Watch the status bar for a `$(check) Laravel IDE Helper updated` message. Enjoy your fresh autocompletion!
+**DDEV:**
+- `laravelIdeHelperRunner.phpPath`: `"ddev exec php"`
+- `laravelIdeHelperRunner.composerCommand`: `"ddev composer"`
 
-## 📝 License
-[MIT License](LICENSE.md)
+**Laravel Sail:**
+- `laravelIdeHelperRunner.phpPath`: `"./vendor/bin/sail php"`
+- `laravelIdeHelperRunner.composerCommand`: `"./vendor/bin/sail composer"`
+
+## License
+
+MIT

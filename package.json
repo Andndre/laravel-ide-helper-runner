@@ -22,41 +22,65 @@
     "configuration": {
       "title": "Laravel IDE Helper Runner",
       "properties": {
-        "laravelIdeHelperRunner.enable": {
+        "laravelIdeHelperRunner.runOnSave": {
           "type": "boolean",
           "default": true,
           "description": "Enable or disable the extension from running on save.",
           "order": 1
         },
-        "laravelIdeHelperRunner.phpCommand": {
+        "laravelIdeHelperRunner.facades": {
+          "type": "boolean",
+          "default": true,
+          "description": "Generate PHPDoc for facades (artisan ide-helper:generate)",
+          "order": 2
+        },
+        "laravelIdeHelperRunner.models": {
+          "type": "boolean",
+          "default": true,
+          "description": "Generate PHPDoc for models (artisan ide-helper:models --nowrite)",
+          "order": 3
+        },
+        "laravelIdeHelperRunner.parallelExecution": {
+          "type": "boolean",
+          "default": true,
+          "description": "Run the generators in parallel instead of sequentially.",
+          "order": 4
+        },
+        "laravelIdeHelperRunner.phpPath": {
           "type": "string",
           "default": "php",
           "description": "The command prefix to run PHP. Use 'ddev exec php', './vendor/bin/sail php', or just 'php'.",
-          "order": 2
+          "order": 5
+        },
+        "laravelIdeHelperRunner.debounceDelay": {
+          "type": "number",
+          "default": 1000,
+          "description": "Delay in milliseconds before running the command after saving a file.",
+          "order": 6
+        },
+        "laravelIdeHelperRunner.autoClearConsole": {
+          "type": "boolean",
+          "default": false,
+          "description": "Clear the output console before running the commands.",
+          "order": 7
         },
         "laravelIdeHelperRunner.composerCommand": {
           "type": "string",
           "default": "composer",
           "description": "The command prefix to run Composer. Use 'ddev composer', './vendor/bin/sail composer', or just 'composer'.",
-          "order": 3
-        },
-        "laravelIdeHelperRunner.commandArgs": {
-          "type": "string",
-          "default": "artisan ide-helper:generate && {php} artisan ide-helper:meta && {php} artisan ide-helper:models --nowrite",
-          "description": "The arguments to pass to the PHP command. '{php}' will be replaced with your phpCommand.",
-          "order": 4
+          "order": 8
         },
         "laravelIdeHelperRunner.addToGitignore": {
           "type": "boolean",
           "default": true,
           "description": "Automatically add the generated _ide_helper files to .gitignore when auto-installing the package.",
-          "order": 5
+          "order": 9
         },
         "laravelIdeHelperRunner.showNotifications": {
           "type": "boolean",
           "default": false,
           "description": "Show a notification popup when the command starts and finishes successfully.",
-          "order": 6
+          "order": 10
         }
       }
     }
