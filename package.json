@@ -1,0 +1,62 @@
+{
+  "name": "laravel-ide-helper-runner",
+  "displayName": "Laravel IDE Helper Runner",
+  "description": "Automatically runs Laravel IDE helper commands on save.",
+  "version": "1.2.0",
+  "publisher": "andndre",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/andndre/laravel-ide-helper-runner.git"
+  },
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:php"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "Laravel IDE Helper Runner",
+      "properties": {
+        "laravelIdeHelperRunner.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable the extension from running on save."
+        },
+        "laravelIdeHelperRunner.showNotifications": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show a notification popup when the command starts and finishes successfully."
+        },
+        "laravelIdeHelperRunner.phpCommand": {
+          "type": "string",
+          "default": "php",
+          "description": "The command prefix to run PHP. Use 'ddev exec php', './vendor/bin/sail php', or just 'php'."
+        },
+        "laravelIdeHelperRunner.composerCommand": {
+          "type": "string",
+          "default": "composer",
+          "description": "The command prefix to run Composer. Use 'ddev composer', './vendor/bin/sail composer', or just 'composer'."
+        },
+        "laravelIdeHelperRunner.addToGitignore": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically add the generated _ide_helper files to .gitignore when auto-installing the package."
+        },
+        "laravelIdeHelperRunner.commandArgs": {
+          "type": "string",
+          "default": "artisan ide-helper:generate && {php} artisan ide-helper:meta && {php} artisan ide-helper:models --nowrite",
+          "description": "The arguments to pass to the PHP command. '{php}' will be replaced with your phpCommand."
+        }
+      }
+    }
+  },
+  "devDependencies": {
+    "@types/node": "18.x",
+    "@types/vscode": "^1.80.0"
+  }
+}
