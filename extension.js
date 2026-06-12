@@ -184,9 +184,6 @@ function runIdeHelperGeneration(cwd, config) {
                                 vscode.window.showErrorMessage('Laravel IDE Helper failed. Check output channel for details.');
                             } else {
                                 vscode.window.setStatusBarMessage('$(check) Laravel IDE Helper updated', 3000);
-                                if (showNotifs) {
-                                    vscode.window.showInformationMessage('Laravel IDE Helper Runner: Successfully generated helpers!');
-                                }
                             }
                             resolve();
                         }
@@ -206,9 +203,6 @@ function runIdeHelperGeneration(cwd, config) {
                     if (stdout) outputChannel.appendLine(`[Stdout] ${stdout}`);
 
                     vscode.window.setStatusBarMessage('$(check) Laravel IDE Helper updated', 3000);
-                    if (showNotifs) {
-                        vscode.window.showInformationMessage('Laravel IDE Helper Runner: Successfully generated helpers!');
-                    }
                     resolve();
                 });
             }

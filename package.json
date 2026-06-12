@@ -2,7 +2,7 @@
   "name": "laravel-ide-helper-runner",
   "displayName": "Laravel IDE Helper Runner",
   "description": "Automatically runs Laravel IDE helper commands on save.",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "publisher": "andndre",
   "repository": {
     "type": "git",
