@@ -32,17 +32,6 @@ function activate(context) {
                 return;
             }
 
-            const generateFacades = config.get('facades');
-            const generateModels = config.get('models');
-            
-            if (!generateFacades && !generateModels) {
-                return; // Nothing to run
-            }
-
-            const phpPath = config.get('phpPath') || 'php';
-            const showNotifs = config.get('showNotifications');
-            const autoClearConsole = config.get('autoClearConsole');
-            const parallelExecution = config.get('parallelExecution');
             const debounceDelay = config.get('debounceDelay') || 1000;
 
             if (saveTimeout) {
@@ -50,62 +39,7 @@ function activate(context) {
             }
 
             saveTimeout = setTimeout(() => {
-                if (autoClearConsole) {
-                    outputChannel.clear();
-                }
-
-                let commands = [];
-                if (generateFacades) commands.push(`${phpPath} artisan ide-helper:generate`);
-                if (generateModels) commands.push(`${phpPath} artisan ide-helper:models --nowrite`);
-                
-                outputChannel.appendLine(`[${new Date().toLocaleTimeString()}] Running (${parallelExecution ? 'parallel' : 'sequential'}): ${commands.join(' | ')}`);
-                if (showNotifs) {
-                    vscode.window.showInformationMessage('Laravel IDE Helper Runner: Generating helpers...');
-                }
-
-                if (parallelExecution) {
-                    let completed = 0;
-                    let hasError = false;
-                    commands.forEach(cmd => {
-                        exec(cmd, { cwd }, (error, stdout, stderr) => {
-                            completed++;
-                            if (error) {
-                                outputChannel.appendLine(`[Error] ${cmd}: ${error.message}`);
-                                hasError = true;
-                            }
-                            if (stderr) outputChannel.appendLine(`[Stderr] ${cmd}: ${stderr}`);
-                            if (stdout) outputChannel.appendLine(`[Stdout] ${cmd}: ${stdout}`);
-                            
-                            if (completed === commands.length) {
-                                if (hasError) {
-                                    vscode.window.showErrorMessage('Laravel IDE Helper failed. Check output channel for details.');
-                                } else {
-                                    vscode.window.setStatusBarMessage('$(check) Laravel IDE Helper updated', 3000);
-                                    if (showNotifs) {
-                                        vscode.window.showInformationMessage('Laravel IDE Helper Runner: Successfully generated helpers!');
-                                    }
-                                }
-                            }
-                        });
-                    });
-                } else {
-                    const fullCommand = commands.join(' && ');
-                    exec(fullCommand, { cwd }, (error, stdout, stderr) => {
-                        if (error) {
-                            outputChannel.appendLine(`[Error] ${error.message}`);
-                            vscode.window.showErrorMessage('Laravel IDE Helper failed. Check output channel for details.');
-                            return;
-                        }
-                        
-                        if (stderr) outputChannel.appendLine(`[Stderr] ${stderr}`);
-                        if (stdout) outputChannel.appendLine(`[Stdout] ${stdout}`);
-
-                        vscode.window.setStatusBarMessage('$(check) Laravel IDE Helper updated', 3000);
-                        if (showNotifs) {
-                            vscode.window.showInformationMessage('Laravel IDE Helper Runner: Successfully generated helpers!');
-                        }
-                    });
-                }
+                runIdeHelperGeneration(cwd, config);
             }, debounceDelay);
         }
     });
@@ -173,6 +107,8 @@ function installIdeHelper(cwd) {
         if (config.get('addToGitignore')) {
             addFilesToGitignore(cwd);
         }
+
+        runIdeHelperGeneration(cwd, config);
     });
 }
 
@@ -202,6 +138,77 @@ function addFilesToGitignore(cwd) {
         }
     } catch (e) {
         console.error("Failed to update .gitignore", e);
+    }
+}
+
+function runIdeHelperGeneration(cwd, config) {
+    const generateFacades = config.get('facades');
+    const generateModels = config.get('models');
+    
+    if (!generateFacades && !generateModels) {
+        return; // Nothing to run
+    }
+
+    const phpPath = config.get('phpPath') || 'php';
+    const showNotifs = config.get('showNotifications');
+    const autoClearConsole = config.get('autoClearConsole');
+    const parallelExecution = config.get('parallelExecution');
+
+    if (autoClearConsole) {
+        outputChannel.clear();
+    }
+
+    let commands = [];
+    if (generateFacades) commands.push(`${phpPath} artisan ide-helper:generate`);
+    if (generateModels) commands.push(`${phpPath} artisan ide-helper:models --nowrite`);
+    
+    outputChannel.appendLine(`[${new Date().toLocaleTimeString()}] Running (${parallelExecution ? 'parallel' : 'sequential'}): ${commands.join(' | ')}`);
+    if (showNotifs) {
+        vscode.window.showInformationMessage('Laravel IDE Helper Runner: Generating helpers...');
+    }
+
+    if (parallelExecution) {
+        let completed = 0;
+        let hasError = false;
+        commands.forEach(cmd => {
+            exec(cmd, { cwd }, (error, stdout, stderr) => {
+                completed++;
+                if (error) {
+                    outputChannel.appendLine(`[Error] ${cmd}: ${error.message}`);
+                    hasError = true;
+                }
+                if (stderr) outputChannel.appendLine(`[Stderr] ${cmd}: ${stderr}`);
+                if (stdout) outputChannel.appendLine(`[Stdout] ${cmd}: ${stdout}`);
+                
+                if (completed === commands.length) {
+                    if (hasError) {
+                        vscode.window.showErrorMessage('Laravel IDE Helper failed. Check output channel for details.');
+                    } else {
+                        vscode.window.setStatusBarMessage('$(check) Laravel IDE Helper updated', 3000);
+                        if (showNotifs) {
+                            vscode.window.showInformationMessage('Laravel IDE Helper Runner: Successfully generated helpers!');
+                        }
+                    }
+                }
+            });
+        });
+    } else {
+        const fullCommand = commands.join(' && ');
+        exec(fullCommand, { cwd }, (error, stdout, stderr) => {
+            if (error) {
+                outputChannel.appendLine(`[Error] ${error.message}`);
+                vscode.window.showErrorMessage('Laravel IDE Helper failed. Check output channel for details.');
+                return;
+            }
+            
+            if (stderr) outputChannel.appendLine(`[Stderr] ${stderr}`);
+            if (stdout) outputChannel.appendLine(`[Stdout] ${stdout}`);
+
+            vscode.window.setStatusBarMessage('$(check) Laravel IDE Helper updated', 3000);
+            if (showNotifs) {
+                vscode.window.showInformationMessage('Laravel IDE Helper Runner: Successfully generated helpers!');
+            }
+        });
     }
 }
 
