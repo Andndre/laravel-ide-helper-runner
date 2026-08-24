@@ -2,7 +2,7 @@
   "name": "laravel-ide-helper-runner",
   "displayName": "Laravel IDE Helper Runner",
   "description": "Automatically runs Laravel IDE helper commands on save.",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "publisher": "andndre",
   "repository": {
     "type": "git",
@@ -15,10 +15,30 @@
     "Other"
   ],
   "activationEvents": [
-    "onLanguage:php"
+    "onLanguage:php",
+    "onCommand:laravelIdeHelperRunner.generateAll",
+    "onCommand:laravelIdeHelperRunner.generateModels",
+    "onCommand:laravelIdeHelperRunner.generateFacades"
   ],
   "main": "./extension.js",
   "contributes": {
+    "commands": [
+      {
+        "command": "laravelIdeHelperRunner.generateAll",
+        "title": "Generate All",
+        "category": "Laravel IDE Helper"
+      },
+      {
+        "command": "laravelIdeHelperRunner.generateModels",
+        "title": "Generate Models PHPDoc",
+        "category": "Laravel IDE Helper"
+      },
+      {
+        "command": "laravelIdeHelperRunner.generateFacades",
+        "title": "Generate Facades PHPDoc",
+        "category": "Laravel IDE Helper"
+      }
+    ],
     "configuration": {
       "title": "Laravel IDE Helper Runner",
       "properties": {
@@ -28,59 +48,71 @@
           "description": "Enable or disable the extension from running on save.",
           "order": 1
         },
+        "laravelIdeHelperRunner.filterPaths": {
+          "type": "boolean",
+          "default": true,
+          "description": "When enabled, auto-run on save only triggers for relevant files (Models/Migrations for models, Config/Providers for facades).",
+          "order": 2
+        },
         "laravelIdeHelperRunner.facades": {
           "type": "boolean",
           "default": true,
           "description": "Generate PHPDoc for facades (artisan ide-helper:generate)",
-          "order": 2
+          "order": 3
         },
         "laravelIdeHelperRunner.models": {
           "type": "boolean",
           "default": true,
           "description": "Generate PHPDoc for models (artisan ide-helper:models --nowrite)",
-          "order": 3
+          "order": 4
         },
         "laravelIdeHelperRunner.parallelExecution": {
           "type": "boolean",
           "default": true,
           "description": "Run the generators in parallel instead of sequentially.",
-          "order": 4
+          "order": 5
         },
         "laravelIdeHelperRunner.phpPath": {
           "type": "string",
           "default": "php",
           "description": "The command prefix to run PHP. Use 'ddev exec php', './vendor/bin/sail php', or just 'php'.",
-          "order": 5
+          "order": 6
         },
         "laravelIdeHelperRunner.debounceDelay": {
           "type": "number",
           "default": 1000,
           "description": "Delay in milliseconds before running the command after saving a file.",
-          "order": 6
+          "order": 7
         },
         "laravelIdeHelperRunner.autoClearConsole": {
           "type": "boolean",
           "default": false,
           "description": "Clear the output console before running the commands.",
-          "order": 7
+          "order": 8
         },
         "laravelIdeHelperRunner.composerCommand": {
           "type": "string",
           "default": "composer",
           "description": "The command prefix to run Composer. Use 'ddev composer', './vendor/bin/sail composer', or just 'composer'.",
-          "order": 8
+          "order": 9
         },
         "laravelIdeHelperRunner.addToGitignore": {
           "type": "boolean",
           "default": true,
           "description": "Automatically add the generated _ide_helper files to .gitignore when auto-installing the package.",
-          "order": 9
+          "order": 10
         },
         "laravelIdeHelperRunner.showNotifications": {
           "type": "boolean",
           "default": false,
           "description": "Show a notification popup when the command starts and finishes successfully.",
-          "order": 10
+          "order": 11
+        },
+        "laravelIdeHelperRunner.timeout": {
+          "type": "number",
+          "default": 15000,
+          "description": "Timeout in milliseconds for helper commands before automatically terminating them.",
+          "order": 12
         }
       }
     }
